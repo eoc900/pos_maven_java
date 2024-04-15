@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         
+    <!-- Project metadata -->
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.eoc900</groupId>
+    <artifactId>my-project</artifactId>
+    <version>1.0.0</version>
+    <name>My printing project</name>
+    <description>Just a simple ESC - POS</description>
+    
+    <!-- Dependencies -->
+    <dependencies>
+        <dependency>
+        <groupId>com.github.anastaciocintra</groupId>
+        <artifactId>escpos-coffee</artifactId>
+        <version>4.1.0</version>
+        </dependency>
+
+        <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.33</version>
+        </dependency>
+    </dependencies>
+    
+
+   
+   
+    
+</project>
