@@ -129,4 +129,22 @@ public class Multidimentional {
 
     }
 
+    public static String[][] removeArrayNullValues(String[][] arr, int itemLen) {
+        int arrLen = arr.length;
+
+        for (int i = 0; i < arrLen; i++) {
+            if (arr[i][0] == null || arr[i][0].isEmpty()) {
+                arrLen = i;
+                break;
+            }
+        }
+        String[][] newArr = new String[arrLen][itemLen];
+
+        for (int j = 0; j < arrLen; j++) {
+            newArr[j] = arr[j];
+        }
+
+        return newArr;
+    }
+
 }
