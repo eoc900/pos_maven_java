@@ -27,6 +27,7 @@ public class Tab {
     // Components of the controls JPanel
     public String[][] servicesAvailable;
     public String[][] servicesAdded; // [servide_id, qty]
+    public String[][] servicesStored = {};
     public String[] lastRowSelected = {};
     public JPanel controlsPanel;
     public JButton addOneUnit;
