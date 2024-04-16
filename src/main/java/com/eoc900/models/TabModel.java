@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.Arrays;
 
 import com.eoc900.DB;
 import com.eoc900.Helpers;
@@ -133,36 +134,91 @@ public class TabModel extends DB {
         }
     }
 
-    public Boolean insertServices(String folio, String[][] servicesStored) throws SQLException {
+    public void insertServices(String folio, String[][] servicesStored) throws SQLException {
         init(false);
+        System.out.println(Arrays.deepToString(servicesStored));
 
         for (int i = 0; i < servicesStored.length; i++) {
-            // calculate subtotal
-            int ID_Servicio = Integer.valueOf(servicesStored[i][0].trim());
-            float precio = Float.parseFloat(servicesStored[i][2].replaceAll("[$ ]", ""));
-            int qty = Integer.valueOf(servicesStored[i][3].trim());
-            float subtotal = precio * (float) qty;
-
-            // conn.close();
 
             try {
-                String sql = "INSERT INTO Servicios_Seleccionados(`ID_Seleccionados`, `Folio`, `ID_Servicio`, `Qty`, `Precio`, `Sub_Total`) VALUES (default,?,?,?,?,?)";
-                PreparedStatement prepared = conn.prepareStatement(sql);
-                prepared.setString(1, folio);
-                prepared.setInt(2, ID_Servicio);
-                prepared.setInt(3, qty);
-                prepared.setFloat(4, precio);
-                prepared.setFloat(5, subtotal);
-                prepared.execute();
-                prepared.close();
+                // calculate subtotal
+
+                if (servicesStored[i][0] != null && !servicesStored[i][0].isEmpty()) {
+
+                    int ID1 = Integer.valueOf(servicesStored[i][0].trim());
+
+                    float precio1 = Float.parseFloat(servicesStored[i][2].replaceAll("[$ ]",
+                            ""));
+                    int qty1 = Integer.valueOf(servicesStored[i][3].trim());
+                    float subtotal1 = precio1 * (float) qty1;
+                    System.out.println(ID1 + "-" + precio1 + "-" + qty1 + "-" + subtotal1);
+                    String sql = "INSERT INTO Servicios_Seleccionados(`ID_Seleccionados`,`Folio`, `ID_Servicio`, `Qty`, `Precio`, `Sub_Total`) VALUES (default,?,?,?,?,?)";
+                    PreparedStatement prepared = conn.prepareStatement(sql);
+                    prepared.setString(1, folio);
+                    prepared.setInt(2, ID1);
+                    prepared.setInt(3, qty1);
+                    prepared.setFloat(4, precio1);
+                    prepared.setFloat(5, subtotal1);
+                    prepared.execute();
+                    prepared.close();
+                }
+
             } catch (SQLException e) {
                 e.printStackTrace();
                 conn.close();
-                return false;
+                // return false;
             }
 
         }
+
         conn.close();
-        return true;
+
+    }
+
+    public void removeServices(String folio) throws SQLException {
+        init(false);
+        try {
+            String sql = "DELETE FROM Servicios_Seleccionados WHERE folio=?";
+            PreparedStatement prepared = conn.prepareStatement(sql);
+            prepared.setString(1, folio);
+            prepared.execute();
+            prepared.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            conn.close();
+        }
+        conn.close();
+    }
+
+    public String[][] retrieveServices(String folio) throws SQLException {
+
+        init(false);
+
+        try {
+            String[][] results = new String[19][5];
+            String sql = "SELECT S.ID_Servicio, S1.Servicio, S1.Precio, S.Qty, S.Sub_Total FROM Servicios_Seleccionados S LEFT JOIN Servicios S1 ON S.ID_Servicio=S1.ID_Servicio WHERE S.folio=?";
+            PreparedStatement prepared = conn.prepareStatement(sql);
+            prepared.setString(1, folio); // This would set age
+            ResultSet result = prepared.executeQuery();
+            // 1. declaring the index for the multidimentional array
+            int i = 0;
+            while (result.next()) {
+
+                // 2. Declare the array
+                String[] arr = new String[5];
+                arr[0] = Integer.toString(result.getInt("ID_Servicio"));
+                arr[1] = result.getString("ID_Servicio");
+                arr[2] = Float.toString(result.getFloat("Precio"));
+                arr[3] = Integer.toString(result.getInt("Qty"));
+                arr[4] = Float.toString(result.getFloat("Sub_Total"));
+                results[i] = arr;
+                i++;
+            }
+            return results;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            conn.close();
+        }
+        return null;
     }
 }

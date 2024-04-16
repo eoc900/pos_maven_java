@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import com.eoc900.HelloWorld;
 import com.eoc900.Helpers;
@@ -146,11 +147,16 @@ public class View extends JFrame {
                 // tab.CreateTab(tab.tabIdentifier, tab.patientName);
                 TabModel nuevaTab = new TabModel();
                 try {
-                    nuevaTab.CreateTab(tab.tabIdentifier, tab.patientName.getText());
-                    nuevaTab.insertServices(tab.tabIdentifier, tab.servicesAdded);
+                    // nuevaTab.CreateTab(tab.tabIdentifier, tab.patientName.getText());
+                    // nuevaTab.insertServices(tab.tabIdentifier, tab.servicesAdded);
+                    // nuevaTab.removeServices("IFYFG1A");
+                    tab.servicesStored = nuevaTab.retrieveServices("28GST00");
+                    System.out.println(Arrays.deepToString(tab.servicesStored));
                 } catch (SQLException e1) {
+
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
+                    System.out.println(e1);
                 }
 
             }
