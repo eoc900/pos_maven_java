@@ -23,6 +23,7 @@ import java.util.Arrays;
 
 import com.eoc900.HelloWorld;
 import com.eoc900.Helpers;
+import com.eoc900.classes.Multidimentional;
 import com.eoc900.models.TabModel;
 
 public class View extends JFrame {
@@ -152,6 +153,8 @@ public class View extends JFrame {
                     // nuevaTab.removeServices("IFYFG1A");
                     tab.servicesStored = nuevaTab.retrieveServices("28GST00");
                     System.out.println(Arrays.deepToString(tab.servicesStored));
+                    String[][] testinArr = Multidimentional.removeArrayNullValues(tab.servicesAdded, 4);
+                    System.out.println(Arrays.deepToString(testinArr));
                 } catch (SQLException e1) {
 
                     // TODO Auto-generated catch block
