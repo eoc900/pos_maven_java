@@ -86,6 +86,32 @@ public class TabModel extends DB {
         return false;
     }
 
+    public Boolean updateTelefono(String folioID, String telefono) {
+        // Start connection
+
+        try {
+            init(false);
+
+            String sql = "UPDATE Comandas SET Telefono=? WHERE Folio=?";
+            PreparedStatement prepared = conn.prepareStatement(sql);
+            prepared.setString(1, telefono); // This would set age
+            prepared.setString(2, folioID);
+            // prepared.setNull(3, java.sql.Types.NULL);
+
+            prepared.execute();
+            System.out.println("Ya se actualizó el teléfono");
+            prepared.close();
+            conn.close();
+
+        } catch (SQLException e) {
+            System.out.println(e);
+            e.printStackTrace();
+
+        }
+
+        return false;
+    }
+
     public ResultSet getAllPendingTabs(int startAt, int count) throws SQLException {
 
         init(false);
@@ -118,7 +144,53 @@ public class TabModel extends DB {
                     i++;
                 }
 
-                System.out.println(i);
+                result.close();
+                prepared.close();
+                conn.close();
+
+                return result;
+            } catch (SQLException e) {
+                System.out.println("There was a huge error...");
+                e.printStackTrace();
+                conn.close();
+            }
+            System.out.println("We shouldn't be getting an error...");
+            return null;
+        }
+    }
+
+    public ResultSet getAllPaidTabs(int startAt, int count) throws SQLException {
+
+        init(false);
+        {
+            try {
+                String sql = "SELECT * FROM Comandas LIMIT ?,? WHERE pagada=1";
+                PreparedStatement prepared = conn.prepareStatement(sql);
+                prepared.setInt(1, startAt); // This would set age
+                prepared.setInt(2, count);
+                ResultSet result = prepared.executeQuery();
+                // 1. declaring the index for the multidimentional array
+                int i = 0;
+
+                while (result.next()) {
+
+                    // 2. Declare the array
+                    String[] arr = new String[3];
+
+                    // Retrieve data from the result set row by row
+                    arr[0] = Integer.toString(result.getInt("Folio")); // Assuming 'id' is a column in your_table
+                    arr[1] = result.getString("Nombre_Paciente"); // Assuming 'name' is a column in your_table
+                    java.sql.Date date = result.getDate(i);
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    arr[2] = dateFormat.format(date);
+                    arr[3] = Integer.toString(result.getInt("Pagada"));
+                    // 3. Insert the array to the results property
+                    // System.out.println(Arrays.toString(arr));
+                    // 4. Increase the index value by +1
+                    results[i] = arr;
+                    i++;
+                }
+
                 result.close();
                 prepared.close();
                 conn.close();
