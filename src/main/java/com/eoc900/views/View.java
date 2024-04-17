@@ -148,13 +148,15 @@ public class View extends JFrame {
                 // tab.CreateTab(tab.tabIdentifier, tab.patientName);
                 TabModel nuevaTab = new TabModel();
                 try {
-                    // nuevaTab.CreateTab(tab.tabIdentifier, tab.patientName.getText());
+                    nuevaTab.CreateTab(tab.tabIdentifier, tab.patientName.getText());
                     // nuevaTab.insertServices(tab.tabIdentifier, tab.servicesAdded);
                     // nuevaTab.removeServices("IFYFG1A");
-                    tab.servicesStored = nuevaTab.retrieveServices("28GST00");
-                    System.out.println(Arrays.deepToString(tab.servicesStored));
-                    String[][] testinArr = Multidimentional.removeArrayNullValues(tab.servicesAdded, 4);
-                    System.out.println(Arrays.deepToString(testinArr));
+                    // tab.servicesStored = nuevaTab.retrieveServices("28GST00");
+                    // System.out.println(Arrays.deepToString(tab.servicesStored));
+                    // String[][] testinArr =
+                    // Multidimentional.removeArrayNullValues(tab.servicesAdded, 4);
+                    // System.out.println(Arrays.deepToString(testinArr));
+                    nuevaTab.updateTelefono("IFYFG1A", "524611246975");
                 } catch (SQLException e1) {
 
                     // TODO Auto-generated catch block
