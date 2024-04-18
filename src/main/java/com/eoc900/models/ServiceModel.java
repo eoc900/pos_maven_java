@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import com.eoc900.DB;
 
-public class Service extends DB {
+public class ServiceModel extends DB {
 
     public ResultSet getServices(int startAt, int count) throws SQLException {
 

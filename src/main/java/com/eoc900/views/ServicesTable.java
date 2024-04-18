@@ -18,6 +18,7 @@ import javax.swing.JTable;
 public class ServicesTable {
 
     public JTable j;
+    public JPanel tableSection;
 
     public void displayServicesTable(JFrame f, String[][] data) {
 
@@ -52,8 +53,8 @@ public class ServicesTable {
 
     public JScrollPane displayServicesTablePanel(String[][] data) {
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        tableSection = new JPanel();
+        tableSection.setLayout(new BoxLayout(tableSection, BoxLayout.Y_AXIS));
 
         // Data to be displayed in the JTable
         // String[][] data = {{name, bla},{name, bla}} // <------ this is the format
@@ -63,18 +64,8 @@ public class ServicesTable {
 
         // Initializing the JTable
         j = new JTable(data, columnNames);
-        // j.setBounds(0, 200, 200, 300);
-        // panel.add(j);
-        // adding it to JScrollPane
         JScrollPane sp = new JScrollPane(j);
-        // j.setFillsViewportHeight(true);
-
-        // f.pack();
-        // f.add(sp);
-        // Frame Size
-        // f.setSize(500, 200);
-        // Frame Visible = true
-
+        tableSection.add(sp);
         return sp;
 
     }

@@ -6,6 +6,9 @@ import javax.swing.JPanel;
 
 public class Preview {
 
+    String patientName;
+    String tabCode;
+
     public static JPanel total(String[][] items) {
         JPanel printTotals = new JPanel();
         printTotals.setLayout(new BoxLayout(printTotals, BoxLayout.Y_AXIS));
