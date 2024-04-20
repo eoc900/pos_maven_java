@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
@@ -24,13 +25,18 @@ import java.util.Arrays;
 import com.eoc900.HelloWorld;
 import com.eoc900.Helpers;
 import com.eoc900.classes.Multidimentional;
+import com.eoc900.models.ServiceModel;
 import com.eoc900.models.TabModel;
+import com.eoc900.controllers.Controller;
+import com.eoc900.views.ServicesTable;
+
+import com.eoc900.DB;
 
 public class View extends JFrame {
     public JTextField[] fields = new JTextField[10];
     public JLabel[] labels = new JLabel[10];
     public int width = 900;
-    public int height = 400;
+    public int height = 500;
     public String windowTitle = "Bienvenido a ZENA";
     public String navAnterior;
     public String[][] dataModel;
@@ -63,10 +69,34 @@ public class View extends JFrame {
                 String[][] d = getData();
                 viewCreateTab(assignedTitle, d);
                 break;
+            case "agregarServicio":
+
+                break;
 
             default:
                 break;
         }
+    }
+
+    public void moduleService(String[][] data) {
+        clearWindow();
+        // 1. Create a main frame
+        JPanel mainFrame = new JPanel();
+        mainFrame.setLayout(new BoxLayout(mainFrame, BoxLayout.Y_AXIS));
+
+        // 2. Bring the first section
+        ServicesTable services = new ServicesTable(this);
+
+        setSize(width, height);
+        mainFrame.add(services.addService());
+        JScrollPane currentServices = services.displayServicesTablePanel(data);
+        services.serviceEvents();
+        mainFrame.add(services.tableSection);
+        add(mainFrame);
+        // EVENTS DECLARATION
+
+        this.pack();
+        setVisible(true);
     }
 
     public void setDataFromModel(String[][] data) {
@@ -80,7 +110,7 @@ public class View extends JFrame {
     public void viewServicesTable(String title, String[][] data) {
         clearWindow();
         this.setTitle(title);
-        ServicesTable test = new ServicesTable();
+        ServicesTable test = new ServicesTable(this);
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
@@ -219,45 +249,6 @@ public class View extends JFrame {
         clearWindow();
         this.add(totals);
         this.setVisible(true);
-    }
-
-    public void addService(String title) {
-
-        // Inputs
-        fields[0] = new JTextField(16);
-        fields[0].setBounds(50, 100, 200, 30);
-        labels[0] = new JLabel("Servicio");
-        labels[0].setBounds(50, 70, 100, 30);
-        fields[1] = new JTextField(16);
-        fields[1].setBounds(50, 170, 200, 30);
-        labels[1] = new JLabel("Precio");
-        labels[1].setBounds(50, 140, 100, 30);
-
-        // Add two buttons to our pane
-        JButton insert = new JButton("Insertar");
-        insert.setBounds(width - 200, height - 100, 100, 30);
-
-        // Add an ActionListener to the button
-        insert.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the button is clicked
-
-                System.out.println("Quieres insertar el siguiente valor: " + fields[0].getText());
-
-            }
-        });
-
-        mainMenu(this);
-
-        add(fields[0]);
-        add(fields[1]);
-        add(labels[0]);
-        add(labels[1]);
-        add(insert);
-
-        setVisible(true);
-
     }
 
     // Landing menu: what the user might see first
@@ -435,7 +426,7 @@ public class View extends JFrame {
 
                 clearWindow();
                 lateralMenu(j);
-                addService("Agregar Servicio 2");
+                // addService("Agregar Servicio 2");
 
             }
         });
@@ -511,7 +502,7 @@ public class View extends JFrame {
                 // Action to perform when the button is clicked
 
                 clearWindow();
-                addService("Agregar Servicio 2");
+                // addService("Agregar Servicio 2");
 
             }
         });

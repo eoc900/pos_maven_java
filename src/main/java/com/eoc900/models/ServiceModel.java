@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import com.eoc900.DB;
 
-public class Service extends DB {
+public class ServiceModel extends DB {
 
     public ResultSet getServices(int startAt, int count) throws SQLException {
 
@@ -56,6 +56,36 @@ public class Service extends DB {
         }
         System.out.println("We shouldn't be getting an error...");
         return null;
+    }
+
+    public boolean updateService(int id, String servicio, Float price) throws SQLException {
+        // Start connection
+        System.out.println(id);
+        System.out.println(servicio);
+        System.out.println(price);
+
+        try {
+            init(false);
+
+            String sql = "UPDATE Servicios SET Servicio=?, Precio=?  WHERE ID_Servicio=?";
+            PreparedStatement prepared = conn.prepareStatement(sql);
+            prepared.setString(1, servicio); // This would set age
+            prepared.setFloat(2, price);
+            prepared.setInt(3, id);
+            // prepared.setNull(3, java.sql.Types.NULL);
+
+            prepared.execute();
+            System.out.println("Ya se actualizó el servicio.");
+            prepared.close();
+            conn.close();
+
+        } catch (SQLException e) {
+            System.out.println(e);
+            e.printStackTrace();
+
+        }
+
+        return false;
     }
 
 }
