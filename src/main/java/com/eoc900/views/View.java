@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
@@ -26,8 +27,8 @@ import com.eoc900.Helpers;
 import com.eoc900.classes.Multidimentional;
 import com.eoc900.models.ServiceModel;
 import com.eoc900.models.TabModel;
-
-import javafx.scene.control.ScrollPane;
+import com.eoc900.controllers.Controller;
+import com.eoc900.views.ServicesTable;
 
 import com.eoc900.DB;
 
@@ -82,15 +83,18 @@ public class View extends JFrame {
         // 1. Create a main frame
         JPanel mainFrame = new JPanel();
         mainFrame.setLayout(new BoxLayout(mainFrame, BoxLayout.Y_AXIS));
+
         // 2. Bring the first section
-        Service services = new Service(width, height);
-        ServicesTable sTable = new ServicesTable();
-        JScrollPane currentServices = sTable.displayServicesTablePanel(data);
+        ServicesTable services = new ServicesTable(this);
 
         setSize(width, height);
         mainFrame.add(services.addService());
-        mainFrame.add(sTable.tableSection);
+        JScrollPane currentServices = services.displayServicesTablePanel(data);
+        services.serviceEvents();
+        mainFrame.add(services.tableSection);
         add(mainFrame);
+        // EVENTS DECLARATION
+
         this.pack();
         setVisible(true);
     }
@@ -106,7 +110,7 @@ public class View extends JFrame {
     public void viewServicesTable(String title, String[][] data) {
         clearWindow();
         this.setTitle(title);
-        ServicesTable test = new ServicesTable();
+        ServicesTable test = new ServicesTable(this);
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 

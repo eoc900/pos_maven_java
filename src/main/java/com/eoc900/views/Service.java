@@ -7,29 +7,34 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import com.eoc900.models.ServiceModel;
+
 import javafx.scene.text.Font;
 
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.Arrays;
 
 public class Service {
-
+    JFrame frame;
     JTextField[] fields = new JTextField[10];
     JLabel[] labels = new JLabel[10];
     JPanel featureAddService;
     JButton insertService;
-    String[][] lastRowSelected = new String[1][3];
+    JButton updateService;
+    String[] lastRowSelected = new String[3];
     int width;
     int height;
     int marginTop;
     int marginBottom;
     int marginLeft;
     int marginRight;
+    public char[] randomString;
 
-    public Service(int windowWidth, int windowHeight) {
-        this.width = windowWidth;
-        this.height = windowHeight;
+    public Service(JFrame window) {
+        this.frame = window;
     }
 
     public JPanel addService() {
@@ -62,17 +67,12 @@ public class Service {
         insertService = new JButton("Insertar");
         insertService.setBounds(200, height - 100, 100, 30);
 
-        // Add an ActionListener to the button
-        insertService.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the button is clicked
+        updateService = new JButton("Actualizar");
+        updateService.setBounds(200, height - 100, 100, 30);
+        updateService.setVisible(false);
 
-                System.out.println("Quieres insertar el siguiente valor: " + fields[0].getText());
-
-            }
-        });
         sectionOne.add(insertService);
+        sectionOne.add(updateService);
         featureAddService.add(sectionTitle);
         featureAddService.add(sectionOne);
 
@@ -81,4 +81,5 @@ public class Service {
         return featureAddService;
 
     }
+
 }
