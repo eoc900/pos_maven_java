@@ -29,10 +29,12 @@ import com.eoc900.models.ServiceModel;
 import com.eoc900.models.TabModel;
 import com.eoc900.controllers.Controller;
 import com.eoc900.views.ServicesTable;
+import com.eoc900.views.MainMenu;
 
 import com.eoc900.DB;
 
 public class View extends JFrame {
+    public Controller navigation;
     public JTextField[] fields = new JTextField[10];
     public JLabel[] labels = new JLabel[10];
     public int width = 900;
@@ -41,14 +43,8 @@ public class View extends JFrame {
     public String navAnterior;
     public String[][] dataModel;
 
-    public View(String title, String viewName) {
-        // This will be the constructor method
-        // we can call either this method or getView(viewName, assignedTitle)
-
-        if (viewName.length() < 1) {
-            return;
-        }
-
+    public View(Controller navigation) {
+        this.navigation = navigation;
     }
 
     public void getView(String viewName, String assignedTitle) {
@@ -87,7 +83,11 @@ public class View extends JFrame {
         // 2. Bring the first section
         ServicesTable services = new ServicesTable(this);
 
+        // 3. Place the go back button
+        JPanel goBack = topGoBackButton();
+
         setSize(width, height);
+        mainFrame.add(goBack);
         mainFrame.add(services.addService());
         JScrollPane currentServices = services.displayServicesTablePanel(data);
         services.serviceEvents();
@@ -97,6 +97,38 @@ public class View extends JFrame {
 
         this.pack();
         setVisible(true);
+    }
+
+    // Landing menu: what the user might see first
+    public void landingMenu() {
+        // As it is not only a menu but also a big view we will need to clear the window
+        clearWindow();
+        // 1. Create a main frame
+        JPanel mainFrame = new JPanel();
+        mainFrame.setLayout(new BoxLayout(mainFrame, BoxLayout.Y_AXIS));
+        MainMenu menu = new MainMenu(this, navigation);
+        JPanel panel = menu.landingMenu();
+
+        this.setSize(300, 150);
+        mainFrame.add(panel);
+        add(mainFrame);
+        this.setVisible(true);
+    }
+
+    // Top button go back
+    public JPanel topGoBackButton() {
+
+        JPanel goBackSection = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JButton back = new JButton("Menú principal");
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                navigation.show("menuPrincipal");
+            }
+        });
+
+        goBackSection.add(back);
+        return goBackSection;
     }
 
     public void setDataFromModel(String[][] data) {
@@ -248,41 +280,6 @@ public class View extends JFrame {
     public void displayTotals(JPanel totals) {
         clearWindow();
         this.add(totals);
-        this.setVisible(true);
-    }
-
-    // Landing menu: what the user might see first
-    public void landingMenu() {
-        // As it is not only a menu but also a big view we will need to clear the window
-        clearWindow();
-
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        JButton newTab = new JButton("+ Nuevo paciente ");
-        JButton misServicios = new JButton(" Mis servicios ");
-        misServicios.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the button is clicked
-
-                getView("tablaServicios", "Bienvenido al menú de Inicio");
-
-            }
-        });
-
-        newTab.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the button is clicked
-
-                getView("crearComanda", "Ingresar paciente");
-
-            }
-        });
-
-        panel.add(newTab);
-        panel.add(misServicios);
-        this.add(panel);
         this.setVisible(true);
     }
 
