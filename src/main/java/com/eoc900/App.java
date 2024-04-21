@@ -11,6 +11,6 @@ import com.eoc900.controllers.Controller;
 public class App {
     public static void main(String[] args) throws Exception {
         Controller control = new Controller();
-        control.show("adminServicios");
+        control.show("menuPrincipal");
     }
 }

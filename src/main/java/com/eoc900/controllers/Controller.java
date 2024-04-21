@@ -7,22 +7,28 @@ import com.eoc900.views.View;
 public class Controller {
 
     String lastVisited;
+    View generalWindow;
+
+    public Controller() {
+        this.generalWindow = new View(this);
+    }
 
     public void show(String actionName) {
 
         switch (actionName) {
-            case "adminServicios":
+            case "services":
                 managerServicios();
                 break;
+            case "menuPrincipal":
+                managerMenuPrincipal();
+
             default:
 
                 break;
         }
-
     }
 
     public void managerServicios() {
-        View view = new View("", "");
         ServiceModel db = new ServiceModel();
         db.init(false);
         try {
@@ -30,7 +36,11 @@ public class Controller {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        view.moduleService(db.results);
+        generalWindow.moduleService(db.results);
+    }
+
+    public void managerMenuPrincipal() {
+        generalWindow.landingMenu();
     }
 
 }
