@@ -1,6 +1,7 @@
 package com.eoc900.views;
 
 import java.awt.ComponentOrientation;
+import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
@@ -18,6 +19,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.eoc900.DB;
 import com.eoc900.classes.Multidimentional;
 import com.eoc900.controllers.Controller;
 import com.eoc900.models.TabModel;
@@ -34,6 +36,7 @@ public class PendingPayments {
     JPanel tableSection;
     JPanel featureSearch;
     JLabel title;
+    JScrollPane sp;
 
     public PendingPayments(JFrame window, Controller nav, int total) {
         this.frame = window;
@@ -63,9 +66,71 @@ public class PendingPayments {
 
         featureSearch.add(sectionTitle);
         featureSearch.add(sectionOne);
+        searchByNameEvents();
 
         return featureSearch;
 
+    }
+
+    public void refreshTable(String[][] data) {
+        System.out.println("Trataste de borrar");
+        // Column Names
+        String[] columnNames = { "Folio", "Nombre Paciente", "Fecha", "Estado" };
+        System.out.println(tableSection);
+        tableSection.removeAll();
+        tableSection.revalidate();
+        tableSection.repaint();
+
+        pagosPendientes = new JTable(data, columnNames);
+        sp = new JScrollPane(pagosPendientes);
+        tableSection.add(sp);
+        frame.setSize(900, 500);
+        // // Initializing the JTable
+
+        // pagosPendientes.setVisible(false);
+
+    }
+
+    public JPanel displayTablePendingPayments(String[][] data) {
+        tableSection = new JPanel();
+        tableSection.setLayout(new BoxLayout(tableSection, BoxLayout.Y_AXIS));
+        String[] columnNames = { "Folio", "Nombre Paciente", "Fecha", "Estado" };
+        pagosPendientes = new JTable(data, columnNames);
+        sp = new JScrollPane(pagosPendientes);
+        tableSection.add(sp);
+        tableEvents();
+
+        return tableSection;
+    }
+
+    public JPanel actionButtons() {
+        JPanel buttonsSection = new JPanel();
+        verPaciente = new JButton("Ver paciente");
+        buttonsSection.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        buttonsSection.add(verPaciente);
+        return buttonsSection;
+    }
+
+    public void setNumber(int num) {
+        this.countPendingPayments = num;
+    }
+
+    public void tableEvents() {
+        ListSelectionModel selectionModel = pagosPendientes.getSelectionModel();
+        selectionModel.addListSelectionListener(new ListSelectionListener() {
+
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    int row = pagosPendientes.getSelectedRow();
+                    String folio = (String) pagosPendientes.getModel().getValueAt(row, 0);
+                    TabModel db = new TabModel();
+                    db.init(false);
+                    String[][] res = db.getTabInformation(folio);
+                    System.out.println(Arrays.deepToString(Multidimentional.removeArrayNullValues(res, 11)));
+
+                }
+            }
+        });
     }
 
     public void searchByNameEvents() {
@@ -87,50 +152,6 @@ public class PendingPayments {
             }
 
         });
-    }
-
-    public void refreshTable(String[][] data) {
-        System.out.println("Trataste de borrar");
-        // Column Names
-        String[] columnNames = { "Folio", "Nombre Paciente", "Fecha", "Estado" };
-        System.out.println(tableSection);
-        tableSection.removeAll();
-        tableSection.revalidate();
-        tableSection.repaint();
-
-        pagosPendientes = new JTable(data, columnNames);
-        JScrollPane sp = new JScrollPane(pagosPendientes);
-        tableSection.add(sp);
-        // // Initializing the JTable
-
-    }
-
-    public JScrollPane displayTablePendingPayments(String[][] data) {
-        tableSection = new JPanel();
-        tableSection.setLayout(new BoxLayout(tableSection, BoxLayout.Y_AXIS));
-        String[] columnNames = { "Folio", "Nombre Paciente", "Fecha", "Estado" };
-        pagosPendientes = new JTable(data, columnNames);
-        JScrollPane sp = new JScrollPane(pagosPendientes);
-        tableSection.add(sp);
-        tableEvents();
-        searchByNameEvents();
-        return sp;
-    }
-
-    public JPanel actionButtons() {
-        JPanel buttonsSection = new JPanel();
-        verPaciente = new JButton("Ver paciente");
-        buttonsSection.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        buttonsSection.add(verPaciente);
-        return buttonsSection;
-    }
-
-    public void setNumber(int num) {
-        this.countPendingPayments = num;
-    }
-
-    public void tableEvents() {
-
     }
 
 }

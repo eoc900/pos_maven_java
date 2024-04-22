@@ -363,6 +363,7 @@ public class TabModel extends DB {
         return 0;
     }
 
+    // Funcional
     public String[][] getUnpaidAccountByPatientName(String patient) {
         init(false);
 
@@ -395,6 +396,70 @@ public class TabModel extends DB {
             result.close();
             prepared.close();
             conn.close();
+            return results;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String[][] getTabInformation(String folio) {
+        init(false);
+
+        try {
+            String tag = "pendiente";
+            String[][] results = new String[19][11]; // still needs to be defined
+            String sql = "SELECT C.Folio, C.Nombre_Paciente, C.Abierta_En, C.Cerrada_En, C.Pagada, C.Telefono, S.ID_Servicio,SE.Servicio,"
+                    +
+                    "S.Qty, S.Precio, S.Sub_Total FROM Comandas C INNER JOIN Servicios_Seleccionados S ON C.Folio=S.Folio LEFT JOIN "
+                    +
+                    "Servicios SE ON S.ID_Servicio=SE.ID_Servicio WHERE C.Folio=?";
+            PreparedStatement prepared = conn.prepareStatement(sql);
+            prepared.setString(1, folio); // This would set age
+            ResultSet result = prepared.executeQuery();
+            int i = 0;
+
+            while (result.next()) {
+                // 2. Declare the array
+                String[] arr = new String[11];
+
+                // -----> Store the Account information in a multidimentional array
+                arr[0] = result.getString("Folio"); // Assuming 'id' is a column in your_table
+                arr[1] = result.getString("Nombre_Paciente"); // Assuming 'name' is a column in your_table
+                java.sql.Date date = result.getDate("Abierta_En");
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                arr[2] = dateFormat.format(date);
+                if (result.getDate("Cerrada_En") == null) {
+                    arr[3] = "Abierta";
+                } else {
+                    java.sql.Date cerrada = result.getDate("Cerrada_En");
+                    DateFormat formatting = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                    arr[3] = formatting.format(cerrada);
+                }
+
+                int pagada = result.getInt("Pagada");
+                if (pagada == 1) {
+                    tag = "pagado";
+                }
+                arr[4] = tag;
+                arr[5] = result.getString("Telefono");
+                arr[6] = Integer.toString(result.getInt("ID_Servicio"));
+                arr[7] = result.getString("Servicio");
+                arr[8] = Integer.toString(result.getInt("Qty"));
+                arr[9] = Float.toString(result.getFloat("Precio"));
+                arr[10] = Float.toString(result.getFloat("Sub_Total"));
+
+                results[i] = arr;
+                // -----> Store the Account information in a multidimentional array
+                i++;
+            }
+
+            System.out.println(i);
+            result.close();
+            prepared.close();
+            conn.close();
+
             return results;
 
         } catch (SQLException e) {

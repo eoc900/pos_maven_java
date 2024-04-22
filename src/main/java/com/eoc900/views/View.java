@@ -130,7 +130,7 @@ public class View extends JFrame {
         JPanel searchSection = pp.displaySearchByName();
         mainFrame.add(searchSection);
 
-        JScrollPane currentPendingAccounts = pp.displayTablePendingPayments(data);
+        JPanel currentPendingAccounts = pp.displayTablePendingPayments(data);
         mainFrame.add(currentPendingAccounts);
 
         JPanel buttons = pp.actionButtons();
@@ -138,6 +138,7 @@ public class View extends JFrame {
 
         add(mainFrame);
         this.pack();
+        this.setSize(900, 500);
         this.setVisible(true);
     }
 
