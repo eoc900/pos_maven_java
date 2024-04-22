@@ -1,7 +1,11 @@
 package com.eoc900.controllers;
 
 import java.sql.SQLException;
+import java.util.Arrays;
+
+import com.eoc900.classes.Multidimentional;
 import com.eoc900.models.ServiceModel;
+import com.eoc900.models.TabModel;
 import com.eoc900.views.View;
 
 public class Controller {
@@ -21,6 +25,16 @@ public class Controller {
                 break;
             case "menuPrincipal":
                 managerMenuPrincipal();
+                break;
+            case "nuevoCliente":
+                managerNuevoCliente();
+                break;
+            case "pagosPendientes":
+                managerPendingPayments();
+                break;
+            case "pagados":
+                managerPayments();
+                break;
 
             default:
 
@@ -41,6 +55,30 @@ public class Controller {
 
     public void managerMenuPrincipal() {
         generalWindow.landingMenu();
+    }
+
+    public void managerNuevoCliente() {
+        ServiceModel db = new ServiceModel();
+        db.init(false);
+        try {
+            db.getServices(0, 19);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        generalWindow.viewCreateTab("Nuevo paciente", db.results);
+    }
+
+    public void managerPendingPayments() {
+        TabModel db = new TabModel();
+        db.init(false);
+        String[][] res = Multidimentional.removeArrayNullValues(db.retrievePendingAccounts(0), 4);
+        int num = db.retrievePendingAccountsNumber(0);
+        generalWindow.modulePendingPayments(res, num);
+    }
+
+    public void managerPayments() {
+
     }
 
 }

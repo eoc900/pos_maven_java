@@ -30,6 +30,7 @@ import com.eoc900.models.TabModel;
 import com.eoc900.controllers.Controller;
 import com.eoc900.views.ServicesTable;
 import com.eoc900.views.MainMenu;
+import com.eoc900.views.PendingPayments;
 
 import com.eoc900.DB;
 
@@ -115,6 +116,31 @@ public class View extends JFrame {
         this.setVisible(true);
     }
 
+    // Listing the current pending payments
+    public void modulePendingPayments(String[][] data, int totalPending) {
+        clearWindow();
+
+        JPanel mainFrame = new JPanel();
+        mainFrame.setLayout(new BoxLayout(mainFrame, BoxLayout.Y_AXIS));
+
+        JPanel goBack = topGoBackButton();
+        mainFrame.add(goBack);
+
+        PendingPayments pp = new PendingPayments(this, navigation, totalPending);
+        JPanel searchSection = pp.displaySearchByName();
+        mainFrame.add(searchSection);
+
+        JScrollPane currentPendingAccounts = pp.displayTablePendingPayments(data);
+        mainFrame.add(currentPendingAccounts);
+
+        JPanel buttons = pp.actionButtons();
+        mainFrame.add(buttons);
+
+        add(mainFrame);
+        this.pack();
+        this.setVisible(true);
+    }
+
     // Top button go back
     public JPanel topGoBackButton() {
 
@@ -170,7 +196,7 @@ public class View extends JFrame {
         // -------------------> TAB MAIN BODY
 
         // GO BACK BUTTON
-        JPanel topMenuVolver = topMenuVolver();
+        JPanel topMenuVolver = topGoBackButton();
         String tabID = Helpers.generateRandomCode(7);
         Tab tab = new Tab(tabID, data);
 
@@ -202,23 +228,15 @@ public class View extends JFrame {
         storing.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Action to perform when the button is clicked
-                System.out.println("Guardando comanda");
-                System.out.println("Folio identificador: " + tab.tabIdentifier);
-                System.out.println("Nombre del paciente: " + tab.patientName.getText());
-                // displayTotals(Preview.total(tab.servicesAdded));
-                // tab.CreateTab(tab.tabIdentifier, tab.patientName);
+
                 TabModel nuevaTab = new TabModel();
                 try {
                     nuevaTab.CreateTab(tab.tabIdentifier, tab.patientName.getText());
-                    // nuevaTab.insertServices(tab.tabIdentifier, tab.servicesAdded);
-                    // nuevaTab.removeServices("IFYFG1A");
+                    nuevaTab.insertServices(tab.tabIdentifier, tab.servicesAdded);
                     // tab.servicesStored = nuevaTab.retrieveServices("28GST00");
-                    // System.out.println(Arrays.deepToString(tab.servicesStored));
-                    // String[][] testinArr =
-                    // Multidimentional.removeArrayNullValues(tab.servicesAdded, 4);
+
                     // System.out.println(Arrays.deepToString(testinArr));
-                    nuevaTab.updateTelefono("IFYFG1A", "524611246975");
+                    // nuevaTab.updateTelefono("IFYFG1A", "524611246975");
                 } catch (SQLException e1) {
 
                     // TODO Auto-generated catch block

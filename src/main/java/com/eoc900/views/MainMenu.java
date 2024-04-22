@@ -16,6 +16,8 @@ public class MainMenu {
     JPanel mainpanel;
     JButton newTab; // Creates a new
     JButton myServices;
+    JButton pendingPayments;
+    JButton payments;
 
     public MainMenu(JFrame window, Controller nav) {
         this.frame = window;
@@ -28,11 +30,14 @@ public class MainMenu {
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         newTab = new JButton("+ Nuevo paciente ");
         myServices = new JButton(" Mis servicios ");
+        pendingPayments = new JButton("Pagos pendiendtes");
+        payments = new JButton("Pagos");
         // Buttons' events
         landingMenuEvents();
         mainPanel.add(newTab);
         mainPanel.add(myServices);
-
+        mainPanel.add(pendingPayments);
+        mainPanel.add(payments);
         return mainPanel;
     }
 
@@ -53,7 +58,27 @@ public class MainMenu {
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 // Action to perform when the button is clicked
 
-                navigation.show("new_patient");
+                navigation.show("nuevoCliente");
+
+            }
+        });
+
+        pendingPayments.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                // Action to perform when the button is clicked
+
+                navigation.show("pagosPendientes");
+
+            }
+        });
+
+        payments.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                // Action to perform when the button is clicked
+
+                navigation.show("pagados");
 
             }
         });
