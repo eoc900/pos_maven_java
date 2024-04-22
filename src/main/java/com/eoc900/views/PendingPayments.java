@@ -86,7 +86,7 @@ public class PendingPayments {
         tableSection.add(sp);
         frame.setSize(900, 500);
         // // Initializing the JTable
-
+        tableEvents();
         // pagosPendientes.setVisible(false);
 
     }
@@ -123,10 +123,12 @@ public class PendingPayments {
                 if (!e.getValueIsAdjusting()) {
                     int row = pagosPendientes.getSelectedRow();
                     String folio = (String) pagosPendientes.getModel().getValueAt(row, 0);
-                    TabModel db = new TabModel();
-                    db.init(false);
-                    String[][] res = db.getTabInformation(folio);
-                    System.out.println(Arrays.deepToString(Multidimentional.removeArrayNullValues(res, 11)));
+
+                    // System.out.println(Arrays.deepToString(Multidimentional.removeArrayNullValues(res,
+                    // 11)));
+
+                    navigation.setMetaData(folio);
+                    navigation.show("cuentaPaciente");
 
                 }
             }

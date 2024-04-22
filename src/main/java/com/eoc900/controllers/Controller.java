@@ -11,6 +11,7 @@ import com.eoc900.views.View;
 public class Controller {
 
     String lastVisited;
+    String metaData;
     View generalWindow;
 
     public Controller() {
@@ -34,6 +35,9 @@ public class Controller {
                 break;
             case "pagados":
                 managerPayments();
+                break;
+            case "cuentaPaciente":
+                managerGetTabInfo();
                 break;
 
             default:
@@ -75,6 +79,19 @@ public class Controller {
         String[][] res = Multidimentional.removeArrayNullValues(db.retrievePendingAccounts(0), 4);
         int num = db.retrievePendingAccountsNumber(0);
         generalWindow.modulePendingPayments(res, num);
+    }
+
+    // To append it to the action so the manager function gets an extra parameter
+    // used in managerGetTabInfo for example
+    public void setMetaData(String text) {
+        this.metaData = text;
+    }
+
+    public void managerGetTabInfo() {
+        String folio = this.metaData;
+        TabModel tm = new TabModel();
+        String[][] res = Multidimentional.removeArrayNullValues(tm.getTabInformation(folio), 11);
+        generalWindow.moduleGetPatientAccount(res);
     }
 
     public void managerPayments() {

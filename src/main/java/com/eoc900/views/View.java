@@ -75,6 +75,7 @@ public class View extends JFrame {
         }
     }
 
+    // Ready
     public void moduleService(String[][] data) {
         clearWindow();
         // 1. Create a main frame
@@ -101,6 +102,7 @@ public class View extends JFrame {
     }
 
     // Landing menu: what the user might see first
+    // Ready
     public void landingMenu() {
         // As it is not only a menu but also a big view we will need to clear the window
         clearWindow();
@@ -117,6 +119,7 @@ public class View extends JFrame {
     }
 
     // Listing the current pending payments
+    // Ready
     public void modulePendingPayments(String[][] data, int totalPending) {
         clearWindow();
 
@@ -142,7 +145,25 @@ public class View extends JFrame {
         this.setVisible(true);
     }
 
+    public void moduleGetPatientAccount(String[][] data) {
+        clearWindow();
+        JPanel viewAccount = new JPanel();
+        viewAccount.setLayout(new BoxLayout(viewAccount, BoxLayout.Y_AXIS));
+        PatientAccount pa = new PatientAccount(this, navigation, data);
+        viewAccount.add(pa.displayFirstSection());
+        viewAccount.add(pa.displaySubtitle("Servicios agregados a esta cuenta."));
+        viewAccount.add(pa.displayTablePendingPayments());
+        viewAccount.add(pa.displayTotalSection());
+        viewAccount.add(pa.displayButtons());
+        add(viewAccount);
+        this.setSize(900, 500);
+        this.setVisible(true);
+        pack();
+
+    }
+
     // Top button go back
+    // Ready
     public JPanel topGoBackButton() {
 
         JPanel goBackSection = new JPanel(new FlowLayout(FlowLayout.LEFT));
