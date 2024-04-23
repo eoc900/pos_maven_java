@@ -86,9 +86,15 @@ class PatientAccount {
         totalSection = new JPanel();
         totalSection.setLayout(new BoxLayout(totalSection, BoxLayout.X_AXIS));
         JLabel totTitle = new JLabel("Total:");
-        totalToBeP = new JLabel("$" + this.folio);
-        totalSection.add(totTitle);
-        totalSection.add(totalToBeP);
+        Float total = calculateTotal(arregloTabla);
+        JPanel left = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        totalToBeP = new JLabel("$" + total);
+        left.add(totTitle);
+        right.add(totalToBeP);
+
+        totalSection.add(left);
+        totalSection.add(right);
         return totalSection;
     }
 
@@ -101,6 +107,14 @@ class PatientAccount {
         buttons.add(editar);
         buttons.add(imprimir);
         return buttons;
+    }
+
+    public Float calculateTotal(String[][] tableServices) {
+        Float total = 0f;
+        for (int i = 0; i < tableServices.length; i++) {
+            total += (Float.parseFloat(tableServices[i][1]) * Float.parseFloat(tableServices[i][2]));
+        }
+        return total;
     }
 
     public void tableEvents() {

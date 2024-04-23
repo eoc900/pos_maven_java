@@ -1,6 +1,7 @@
 package com.eoc900.views;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -9,6 +10,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -21,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.io.File;
 
 import com.eoc900.HelloWorld;
 import com.eoc900.Helpers;
@@ -38,7 +41,7 @@ public class View extends JFrame {
     public Controller navigation;
     public JTextField[] fields = new JTextField[10];
     public JLabel[] labels = new JLabel[10];
-    public int width = 900;
+    public int width = 1200;
     public int height = 500;
     public String windowTitle = "Bienvenido a ZENA";
     public String navAnterior;
@@ -107,12 +110,31 @@ public class View extends JFrame {
         // As it is not only a menu but also a big view we will need to clear the window
         clearWindow();
         // 1. Create a main frame
+        try {
+            File f = new File("src/main/resources/amese_logo.png");
+
+            if (f.exists()) {
+                System.out.println("The file exists");
+
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            System.out.println(e);
+        }
+
         JPanel mainFrame = new JPanel();
         mainFrame.setLayout(new BoxLayout(mainFrame, BoxLayout.Y_AXIS));
+        JLabel imgLabel = new JLabel(new ImageIcon("src/main/resources/amese_logo.png"));
+        JPanel topLogo = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        System.out.println(topLogo.getMaximumSize());
+        topLogo.add(imgLabel);
+
+        mainFrame.add(topLogo);
         MainMenu menu = new MainMenu(this, navigation);
+
         JPanel panel = menu.landingMenu();
 
-        this.setSize(300, 150);
+        this.setSize(1200, 350);
         mainFrame.add(panel);
         add(mainFrame);
         this.setVisible(true);
@@ -141,7 +163,7 @@ public class View extends JFrame {
 
         add(mainFrame);
         this.pack();
-        this.setSize(900, 500);
+        this.setSize(1200, 500);
         this.setVisible(true);
     }
 
@@ -149,6 +171,9 @@ public class View extends JFrame {
         clearWindow();
         JPanel viewAccount = new JPanel();
         viewAccount.setLayout(new BoxLayout(viewAccount, BoxLayout.Y_AXIS));
+
+        JPanel goBack = topGoBackButton();
+        viewAccount.add(goBack);
         PatientAccount pa = new PatientAccount(this, navigation, data);
         viewAccount.add(pa.displayFirstSection());
         viewAccount.add(pa.displaySubtitle("Servicios agregados a esta cuenta."));
@@ -156,9 +181,9 @@ public class View extends JFrame {
         viewAccount.add(pa.displayTotalSection());
         viewAccount.add(pa.displayButtons());
         add(viewAccount);
-        this.setSize(900, 500);
-        this.setVisible(true);
         pack();
+        setSize(1200, 300);
+        this.setVisible(true);
 
     }
 
@@ -312,6 +337,7 @@ public class View extends JFrame {
         mainPanel.add(additional);
 
         this.add(mainPanel);
+
         this.setResizable(true);
         this.pack();
         this.setVisible(true);
