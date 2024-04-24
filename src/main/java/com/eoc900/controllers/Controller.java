@@ -95,7 +95,11 @@ public class Controller {
     }
 
     public void managerPayments() {
-
+        TabModel db = new TabModel();
+        db.init(false);
+        String[][] res = Multidimentional.removeArrayNullValues(db.retrievePaidAccounts(1), 4);
+        int num = db.retrievePaidAccountsNumber(1);
+        generalWindow.moduleAccountsPaid(res, num);
     }
 
 }

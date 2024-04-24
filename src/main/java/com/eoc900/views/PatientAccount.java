@@ -1,6 +1,8 @@
 package com.eoc900.views;
 
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -13,6 +15,7 @@ import javax.swing.JTable;
 
 import com.eoc900.classes.Multidimentional;
 import com.eoc900.controllers.Controller;
+import com.eoc900.models.TabModel;
 
 class PatientAccount {
     JFrame window;
@@ -103,9 +106,11 @@ class PatientAccount {
         marcarPagado = new JButton("Marcar Pagado");
         editar = new JButton("Editar");
         imprimir = new JButton("Imprimir");
+        accountEvents();
         buttons.add(marcarPagado);
         buttons.add(editar);
         buttons.add(imprimir);
+
         return buttons;
     }
 
@@ -115,6 +120,19 @@ class PatientAccount {
             total += (Float.parseFloat(tableServices[i][1]) * Float.parseFloat(tableServices[i][2]));
         }
         return total;
+    }
+
+    public void accountEvents() {
+        marcarPagado.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                // TODO Auto-generated method stub
+                TabModel db = new TabModel();
+                db.updateStatus(folio, 1);
+            }
+
+        });
     }
 
     public void tableEvents() {

@@ -338,11 +338,78 @@ public class TabModel extends DB {
     }
 
     // FUNCIONAL
-    public int retrievePendingAccountsNumber(int estado) {
+    public String[][] retrievePaidAccounts(int estado) {
         init(false);
 
         try {
             String tag = "pendiente";
+            String[][] results = new String[19][4];
+            String sql = "SELECT * FROM Comandas WHERE pagada=?";
+            PreparedStatement prepared = conn.prepareStatement(sql);
+            prepared.setInt(1, estado); // This would set age
+            ResultSet result = prepared.executeQuery();
+            // 1. declaring the index for the multidimentional array
+            int i = 0;
+            while (result.next()) {
+                // // 2. Declare the array
+                String[] arr = new String[4];
+                // // Retrieve data from the result set row by row
+                arr[0] = result.getString("Folio"); // Assuming 'id' is a column in
+                // your_table
+                arr[1] = result.getString("Nombre_Paciente"); // Assuming 'name' is a column
+                // in your_table
+                java.sql.Date date = result.getDate("Abierta_En");
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                arr[2] = dateFormat.format(date);
+                int pagada = result.getInt("Pagada");
+                if (pagada == 1) {
+                    tag = "pagado";
+                }
+                arr[3] = tag;
+                results[i] = arr;
+                i++;
+            }
+            result.close();
+            prepared.close();
+            conn.close();
+            return results;
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return null;
+    }
+
+    // FUNCIONAL
+    public int retrievePendingAccountsNumber(int estado) {
+        init(false);
+
+        try {
+            String[][] results = new String[19][4];
+            String sql = "SELECT COUNT(*) AS num FROM Comandas WHERE pagada=?";
+            PreparedStatement prepared = conn.prepareStatement(sql);
+            prepared.setInt(1, estado); // This would set age
+            ResultSet result = prepared.executeQuery();
+            int numero = 0;
+            while (result.next()) {
+                numero = result.getInt("num");
+            }
+            result.close();
+            prepared.close();
+            conn.close();
+            return numero;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    // FUNCIONAL
+    public int retrievePaidAccountsNumber(int estado) {
+        init(false);
+
+        try {
             String[][] results = new String[19][4];
             String sql = "SELECT COUNT(*) AS num FROM Comandas WHERE pagada=?";
             PreparedStatement prepared = conn.prepareStatement(sql);
@@ -388,6 +455,47 @@ public class TabModel extends DB {
                 int pagada = result.getInt("Pagada");
                 if (pagada == 1) {
                     tag = "pagado";
+                }
+                arr[3] = tag;
+                results[i] = arr;
+                i++;
+            }
+            result.close();
+            prepared.close();
+            conn.close();
+            return results;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Funcional
+    public String[][] getPaidAccountByPatientName(String patient) {
+        init(false);
+
+        try {
+            String tag = "pendiente";
+            String[][] results = new String[19][4];
+            String sql = "SELECT Folio, Nombre_Paciente, Abierta_En, Pagada FROM Comandas WHERE Nombre_Paciente LIKE ? AND Pagada=1";
+            PreparedStatement prepared = conn.prepareStatement(sql);
+            prepared.setString(1, "%" + patient + "%"); // This would set age
+            ResultSet result = prepared.executeQuery();
+            int i = 0;
+
+            while (result.next()) {
+                // 2. Declare the array
+                String[] arr = new String[4];
+
+                arr[0] = result.getString("Folio");
+                arr[1] = result.getString("Nombre_Paciente");
+                java.sql.Date date = result.getDate("Abierta_En");
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                arr[2] = dateFormat.format(date);
+                int pagada = result.getInt("Pagada");
+                if (pagada == 1) {
+                    tag = "Pagado";
                 }
                 arr[3] = tag;
                 results[i] = arr;

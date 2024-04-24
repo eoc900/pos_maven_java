@@ -167,6 +167,33 @@ public class View extends JFrame {
         this.setVisible(true);
     }
 
+    // Ready
+    public void moduleAccountsPaid(String[][] data, int totalPaid) {
+        clearWindow();
+
+        JPanel mainFrame = new JPanel();
+        mainFrame.setLayout(new BoxLayout(mainFrame, BoxLayout.Y_AXIS));
+
+        JPanel goBack = topGoBackButton();
+        mainFrame.add(goBack);
+
+        Paid pp = new Paid(this, navigation, totalPaid);
+        JPanel searchSection = pp.displaySearchByName();
+        mainFrame.add(searchSection);
+
+        JPanel currentPaidAccounts = pp.displayTablePayments(data);
+        mainFrame.add(currentPaidAccounts);
+
+        JPanel buttons = pp.actionButtons();
+        mainFrame.add(buttons);
+
+        add(mainFrame);
+        this.pack();
+        this.setSize(1200, 500);
+        this.setVisible(true);
+    }
+
+    // Ready
     public void moduleGetPatientAccount(String[][] data) {
         clearWindow();
         JPanel viewAccount = new JPanel();
