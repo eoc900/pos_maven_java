@@ -21,6 +21,7 @@ public class Printing {
     public String urlFactura;
     public String[][] servicesC;
     public Float total;
+    public String[] printersAvailable;
 
     public Printing(String mainTitle, String patient, String location, String telephone, String date, String[][] data,
             Float total) {
@@ -31,6 +32,7 @@ public class Printing {
         this.date = date;
         this.servicesC = data;
         this.total = total;
+        this.printersAvailable = returnPrintersAvailable();
     }
 
     public void setPrinterName(String name) {
