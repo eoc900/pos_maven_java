@@ -3,6 +3,7 @@ package com.eoc900.views;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -23,6 +24,7 @@ class PatientAccount {
     JLabel folioText;
     JLabel subtitle;
     String folio;
+    int accountStatus;
     String[] lastRowSelected;
     String[][] generalInformation;
     String[][] arregloTabla;
@@ -39,6 +41,12 @@ class PatientAccount {
     JScrollPane sp;
 
     public PatientAccount(JFrame window, Controller nav, String[][] data) {
+        // 1. We first get a general m-array containing services added and account info
+        // 2. The indexes array is just defining which elements of the array behind we
+        // want to extract
+        // NOTE: point number two is meant for a reduced array used in the services
+        // table.
+
         this.window = window;
         this.navigation = nav;
         this.generalInformation = data;
@@ -49,6 +57,9 @@ class PatientAccount {
         String[][] updated = Multidimentional.reduceArray(data,
                 indexes);
         this.arregloTabla = updated;
+        // 3. We need to set the status as int so we can display or not some features
+        this.accountStatus = Integer.parseInt(data[0][4]);
+        System.out.println(Arrays.deepToString(data));
     }
 
     public JPanel displayFirstSection() {
@@ -107,8 +118,12 @@ class PatientAccount {
         editar = new JButton("Editar");
         imprimir = new JButton("Imprimir");
         accountEvents();
-        buttons.add(marcarPagado);
-        buttons.add(editar);
+
+        if (this.accountStatus == 0) {
+            buttons.add(marcarPagado);
+            buttons.add(editar);
+        }
+
         buttons.add(imprimir);
 
         return buttons;

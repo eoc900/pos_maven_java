@@ -160,4 +160,10 @@ public class Multidimentional {
         return updated;
     }
 
+    public static String splitWord(String word, int wordLimit) {
+        String[] res = word.split(" ");
+        String newWord = res[0] + " " + res[1];
+        return newWord;
+    }
+
 }

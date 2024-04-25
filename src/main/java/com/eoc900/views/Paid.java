@@ -84,7 +84,7 @@ public class Paid {
         pagosPendientes = new JTable(data, columnNames);
         sp = new JScrollPane(pagosPendientes);
         tableSection.add(sp);
-        frame.setSize(900, 500);
+        frame.setSize(1200, 500);
         // // Initializing the JTable
         tableEvents();
         // pagosPendientes.setVisible(false);
@@ -128,6 +128,8 @@ public class Paid {
                     // 11)));
 
                     System.out.println("You are sending data to the printer...");
+                    navigation.setMetaData(folio);
+                    navigation.show("cuentaPaciente");
 
                 }
             }
