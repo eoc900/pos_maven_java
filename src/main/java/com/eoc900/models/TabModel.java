@@ -546,11 +546,7 @@ public class TabModel extends DB {
                     arr[3] = formatting.format(cerrada);
                 }
 
-                int pagada = result.getInt("Pagada");
-                if (pagada == 1) {
-                    tag = "pagado";
-                }
-                arr[4] = tag;
+                arr[4] = Integer.toString(result.getInt("Pagada"));
                 arr[5] = result.getString("Telefono");
                 arr[6] = Integer.toString(result.getInt("ID_Servicio"));
                 arr[7] = result.getString("Servicio");
