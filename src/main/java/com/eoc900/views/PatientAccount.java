@@ -110,7 +110,6 @@ class PatientAccount {
         totalToBeP = new JLabel("$" + total);
         left.add(totTitle);
         right.add(totalToBeP);
-
         totalSection.add(left);
         totalSection.add(right);
         return totalSection;
@@ -122,6 +121,21 @@ class PatientAccount {
         editar = new JButton("Editar");
         imprimir = new JButton("Imprimir");
         accountEvents();
+
+        // Editar events here
+        editar.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // We get the current Account and we call something similar as the createTab but
+                // now employed with edit feature.
+                System.out.println("The value that we need to get after pressing the edit button is the following.");
+                System.out.println(folio);
+                navigation.setMetaData(folio);
+                navigation.show("editarCliente");
+            }
+
+        });
 
         if (this.accountStatus == 0) {
             buttons.add(marcarPagado);

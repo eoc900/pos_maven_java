@@ -45,7 +45,7 @@ public class View extends JFrame {
     public int height = 500;
     public String windowTitle = "Bienvenido a ZENA";
     public String navAnterior;
-    public String[][] dataModel;
+    public String[][] patientSelectedServices;
 
     public View(Controller navigation) {
         // The navigation object helps to load other views
@@ -206,35 +206,16 @@ public class View extends JFrame {
         return goBackSection;
     }
 
-    public void setDataFromModel(String[][] data) {
-        this.dataModel = data;
-    }
+    // ------> NOTE: Ready but needs refactoring
+    public void viewCreateTab(String title, String[][] data, Boolean isEdit, String[][] servicesToEdit,
+            String folioEdit) {
 
-    public String[][] getData() {
-        return this.dataModel;
-    }
+        if (isEdit) {
+            // Just extract what is nesesary from the retrievedServices
+            String[] indexes = { "0", "1", "2", "3" };
+            String[][] newArr = Multidimentional.reduceArray(servicesToEdit, indexes);
 
-    public void viewServicesTable(String title, String[][] data) {
-        clearWindow();
-        this.setTitle(title);
-        ServicesTable test = new ServicesTable(this);
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-
-        JPanel topMenuVolver = topGoBackButton();
-        JScrollPane tabla = test.displayServicesTablePanel(data);
-
-        mainPanel.add(topMenuVolver);
-        mainPanel.add(tabla);
-        // mainPanel.add(tabla);
-
-        this.setSize(width, height);
-        this.add(mainPanel);
-        this.setResizable(true);
-        this.setVisible(true);
-    }
-
-    public void viewCreateTab(String title, String[][] data) {
+        }
 
         // We clear the window before rendering
         clearWindow();
@@ -247,7 +228,12 @@ public class View extends JFrame {
         // GO BACK BUTTON
         JPanel topMenuVolver = topGoBackButton();
         // 1. Generate Random Tab Identifier
-        String tabID = Helpers.generateRandomCode(7);
+
+        String tabID = folioEdit;
+        if (!isEdit) {
+            tabID = Helpers.generateRandomCode(7);
+        }
+
         Tab tab = new Tab(tabID, data);
 
         // TAB INPUTS
@@ -264,6 +250,9 @@ public class View extends JFrame {
 
         // SERVICES SELECTED
         JPanel servicesSelected = tab.addedServicesPanel();
+        if (isEdit) {
+            tab.renderServicesAdded(servicesToEdit);
+        }
 
         // TOTAL UPDATE
         JPanel totals = tab.displayTotalsAndRefresh(0.00f);
@@ -281,37 +270,41 @@ public class View extends JFrame {
         storing.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 System.out.println("You are trying to save:");
                 String pName = tab.patientName.getText();
                 System.out.println(pName);
 
-                // 1. Check if the name of the patient is valid
-                if (pName == null || pName.isEmpty() || pName.equals("Paciente")) {
-                    System.out.println("condición cumplida");
-                    Alert alert = new Alert("¡Paciente inválido!", "Por favor ingresa un nombre válido de paciente.");
-                    alert.popupNormal(350);
-                    return;
-                }
+                if (!isEdit) {
+                    // 1. Check if the name of the patient is valid
+                    if (pName == null || pName.isEmpty() || pName.equals("Paciente")) {
+                        System.out.println("condición cumplida");
+                        Alert alert = new Alert("¡Paciente inválido!",
+                                "Por favor ingresa un nombre válido de paciente.");
+                        alert.popupNormal(350);
+                        return;
+                    }
 
-                // 2. Check
-                if (Multidimentional.removeArrayNullValues(tab.servicesAdded, 4).length < 1) {
-                    Alert alert = new Alert("¡Cuenta vacía!",
-                            "Por favor agrega un servicio antes de abrir una cuenta.");
-                    alert.popupNormal(450);
-                    return;
-                }
+                    // 2. Check
+                    if (Multidimentional.removeArrayNullValues(tab.servicesAdded, 4).length < 1) {
+                        Alert alert = new Alert("¡Cuenta vacía!",
+                                "Por favor agrega un servicio antes de abrir una cuenta.");
+                        alert.popupNormal(450);
+                        return;
+                    }
 
-                TabModel nuevaTab = new TabModel();
-                try {
-                    nuevaTab.CreateTab(tab.tabIdentifier, tab.patientName.getText());
-                    nuevaTab.insertServices(tab.tabIdentifier, tab.servicesAdded);
-                    navigation.setMetaData(tab.tabIdentifier);
-                    navigation.show("cuentaPaciente");
-                } catch (SQLException e1) {
+                    TabModel nuevaTab = new TabModel();
+                    try {
+                        nuevaTab.CreateTab(tab.tabIdentifier, tab.patientName.getText());
+                        nuevaTab.insertServices(tab.tabIdentifier, tab.servicesAdded);
+                        navigation.setMetaData(tab.tabIdentifier);
+                        navigation.show("cuentaPaciente");
+                    } catch (SQLException e1) {
 
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                    System.out.println(e1);
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                        System.out.println(e1);
+                    }
                 }
 
             }

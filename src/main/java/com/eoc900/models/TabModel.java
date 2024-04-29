@@ -279,7 +279,7 @@ public class TabModel extends DB {
                 // 2. Declare the array
                 String[] arr = new String[5];
                 arr[0] = Integer.toString(result.getInt("ID_Servicio"));
-                arr[1] = result.getString("ID_Servicio");
+                arr[1] = result.getString("Servicio");
                 arr[2] = Float.toString(result.getFloat("Precio"));
                 arr[3] = Integer.toString(result.getInt("Qty"));
                 arr[4] = Float.toString(result.getFloat("Sub_Total"));

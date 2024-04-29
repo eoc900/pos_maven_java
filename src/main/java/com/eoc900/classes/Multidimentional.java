@@ -147,7 +147,8 @@ public class Multidimentional {
         return newArr;
     }
 
-    public static String[][] reduceArray(String[][] mainArray, String[] arrayOfIndexes) {
+    public static String[][] reduceArray(String[][] mainArray, String[] arrayOfIndexes) { // For the moment only 4 item
+                                                                                          // array
         int lenOfItem = arrayOfIndexes.length;
         int lenOfBigArr = mainArray.length;
         String[][] updated = new String[lenOfBigArr][lenOfItem];
