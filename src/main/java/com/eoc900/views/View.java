@@ -48,37 +48,12 @@ public class View extends JFrame {
     public String[][] dataModel;
 
     public View(Controller navigation) {
+        // The navigation object helps to load other views
         this.navigation = navigation;
     }
 
-    public void getView(String viewName, String assignedTitle) {
-        if (viewName.length() < 1) {
-            return;
-        }
-        clearWindow();
-
-        switch (viewName) {
-            case "tablaServicios":
-                String[][] data = getData();
-                viewServicesTable(assignedTitle, data);
-                break;
-            case "menuPrincipal":
-                landingMenu();
-                break;
-            case "crearComanda":
-                String[][] d = getData();
-                viewCreateTab(assignedTitle, d);
-                break;
-            case "agregarServicio":
-
-                break;
-
-            default:
-                break;
-        }
-    }
-
     // Ready
+    // Admon feature
     public void moduleService(String[][] data) {
         clearWindow();
         // 1. Create a main frame
@@ -246,7 +221,7 @@ public class View extends JFrame {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
-        JPanel topMenuVolver = topMenuVolver();
+        JPanel topMenuVolver = topGoBackButton();
         JScrollPane tabla = test.displayServicesTablePanel(data);
 
         mainPanel.add(topMenuVolver);
@@ -271,6 +246,7 @@ public class View extends JFrame {
 
         // GO BACK BUTTON
         JPanel topMenuVolver = topGoBackButton();
+        // 1. Generate Random Tab Identifier
         String tabID = Helpers.generateRandomCode(7);
         Tab tab = new Tab(tabID, data);
 
@@ -289,6 +265,9 @@ public class View extends JFrame {
         // SERVICES SELECTED
         JPanel servicesSelected = tab.addedServicesPanel();
 
+        // TOTAL UPDATE
+        JPanel totals = tab.displayTotalsAndRefresh(0.00f);
+
         // SERVICE TABLE SECTION
         JScrollPane serviceTable = tab.serviceSelection(data);
 
@@ -302,15 +281,32 @@ public class View extends JFrame {
         storing.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                System.out.println("You are trying to save:");
+                String pName = tab.patientName.getText();
+                System.out.println(pName);
+
+                // 1. Check if the name of the patient is valid
+                if (pName == null || pName.isEmpty() || pName.equals("Paciente")) {
+                    System.out.println("condición cumplida");
+                    Alert alert = new Alert("¡Paciente inválido!", "Por favor ingresa un nombre válido de paciente.");
+                    alert.popupNormal(350);
+                    return;
+                }
+
+                // 2. Check
+                if (Multidimentional.removeArrayNullValues(tab.servicesAdded, 4).length < 1) {
+                    Alert alert = new Alert("¡Cuenta vacía!",
+                            "Por favor agrega un servicio antes de abrir una cuenta.");
+                    alert.popupNormal(450);
+                    return;
+                }
 
                 TabModel nuevaTab = new TabModel();
                 try {
                     nuevaTab.CreateTab(tab.tabIdentifier, tab.patientName.getText());
                     nuevaTab.insertServices(tab.tabIdentifier, tab.servicesAdded);
-                    // tab.servicesStored = nuevaTab.retrieveServices("28GST00");
-
-                    // System.out.println(Arrays.deepToString(testinArr));
-                    // nuevaTab.updateTelefono("IFYFG1A", "524611246975");
+                    navigation.setMetaData(tab.tabIdentifier);
+                    navigation.show("cuentaPaciente");
                 } catch (SQLException e1) {
 
                     // TODO Auto-generated catch block
@@ -356,7 +352,7 @@ public class View extends JFrame {
 
         mainPanel.add(controls);
         mainPanel.add(servicesSelected);
-
+        mainPanel.add(totals);
         mainPanel.add(serviceTable);
 
         mainPanel.add(secondSection);
@@ -374,254 +370,6 @@ public class View extends JFrame {
         clearWindow();
         this.add(totals);
         this.setVisible(true);
-    }
-
-    // Botón de volver menú superior
-    public JPanel topMenuVolver() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panel.setBounds(0, 0, width, 100);
-        JButton volver = new JButton("Menú principal");
-
-        volver.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the button is clicked
-
-                getView("menuPrincipal", "Bienvenido al menú de Inicio.");
-
-            }
-        });
-
-        volver.setBounds(30, 30, 100, 50);
-        panel.add(volver);
-        return panel;
-    }
-
-    //
-
-    // Top Menu
-    public JPanel topMenu() {
-
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-
-        JButton verServicios = new JButton("Servicios");
-
-        JButton agregarServicio = new JButton("+ Servicio");
-        JButton checkout = new JButton("Cuenta");
-        JButton printBtn = new JButton("Imprimir");
-        agregarServicio.setBounds(10, 10, 100, 50);
-        checkout.setBounds(10, 70, 100, 50);
-        printBtn.setBounds(10, 140, 100, 50);
-        verServicios.setBounds(10, 190, 100, 50);
-
-        // Add an ActionListener to the button
-        checkout.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the button is clicked
-
-                // clearWindow();
-                // topMenu();
-
-            }
-        });
-
-        // Add an ActionListener to the button
-        agregarServicio.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the button is clicked
-
-                // clearWindow();
-                // lateralMenu(j);
-                // addService("Agregar Servicio 2");
-
-            }
-        });
-
-        // Add an ActionListener to the button
-        verServicios.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the button is clicked
-
-                // clearWindow();
-                // lateralMenu(j);
-
-            }
-        });
-
-        // Add an ActionListener to the button
-        printBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the button is clicked
-                System.out.println("Imprimiendo...");
-                HelloWorld printer = new HelloWorld();
-                String printerName = "Printer-58 USB Printing Support";
-                try {
-                    printer.justPrint(printerName);
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                    System.out.println(e1);
-                }
-
-            }
-        });
-
-        panel.add(agregarServicio);
-        panel.add(checkout);
-        panel.add(printBtn);
-        panel.add(verServicios);
-
-        return panel;
-
-    }
-
-    // Lateral Menu
-    public void lateralMenu(JFrame j) {
-
-        JPanel panel = new JPanel();
-        panel.setBounds(0, 0, 100, 300);
-
-        JButton verServicios = new JButton("Servicios");
-
-        JButton agregarServicio = new JButton("+ Servicio");
-        JButton checkout = new JButton("Cuenta");
-        JButton printBtn = new JButton("Imprimir");
-        agregarServicio.setBounds(10, 10, 100, 50);
-        checkout.setBounds(10, 70, 100, 50);
-        printBtn.setBounds(10, 140, 100, 50);
-        verServicios.setBounds(10, 190, 100, 50);
-
-        // Add an ActionListener to the button
-        checkout.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the button is clicked
-
-                clearWindow();
-                lateralMenu(j);
-
-            }
-        });
-
-        // Add an ActionListener to the button
-        agregarServicio.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the button is clicked
-
-                clearWindow();
-                lateralMenu(j);
-                // addService("Agregar Servicio 2");
-
-            }
-        });
-
-        // Add an ActionListener to the button
-        verServicios.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the button is clicked
-
-                clearWindow();
-                lateralMenu(j);
-
-            }
-        });
-
-        // Add an ActionListener to the button
-        printBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the button is clicked
-                System.out.println("Imprimiendo...");
-                HelloWorld printer = new HelloWorld();
-                String printerName = "Printer-58 USB Printing Support";
-                try {
-                    printer.justPrint(printerName);
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                    System.out.println(e1);
-                }
-
-            }
-        });
-
-        panel.add(agregarServicio);
-        panel.add(checkout);
-        panel.add(printBtn);
-        panel.add(verServicios);
-
-        j.add(panel);
-
-    }
-
-    public void mainMenu(JFrame j) {
-
-        JPanel panel = new JPanel();
-        panel.setBounds(0, 0, 100, 300);
-
-        JButton agregarServicio = new JButton("+ Servicio");
-        JButton checkout = new JButton("Cuenta");
-        JButton printBtn = new JButton("Imprimir");
-        agregarServicio.setBounds(50, 10, 100, 50);
-        checkout.setBounds(155, 10, 100, 50);
-        printBtn.setBounds(340, 10, 100, 50);
-
-        // Add an ActionListener to the button
-        checkout.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the button is clicked
-
-                clearWindow();
-                mainMenu(j);
-
-            }
-        });
-
-        // Add an ActionListener to the button
-        agregarServicio.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the button is clicked
-
-                clearWindow();
-                // addService("Agregar Servicio 2");
-
-            }
-        });
-
-        // Add an ActionListener to the button
-        printBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the button is clicked
-                System.out.println("Imprimiendo...");
-                HelloWorld printer = new HelloWorld();
-                String printerName = "Printer-58 USB Printing Support";
-                try {
-                    printer.justPrint(printerName);
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                    System.out.println(e1);
-                }
-
-            }
-        });
-
-        panel.add(agregarServicio);
-        panel.add(checkout);
-        panel.add(printBtn);
-
-        j.add(panel);
-
     }
 
     // We use clear window everytime we want to remove all the window components

@@ -17,6 +17,7 @@ import javax.swing.event.AncestorListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.eoc900.Helpers;
 import com.eoc900.classes.Multidimentional;
 
 import javax.swing.JFrame;
@@ -40,6 +41,8 @@ public class Tab {
     public JLabel controlServicioText;
     public JLabel controlPrecioText;
     public JTextField campoCantidad;
+    public JPanel totalSection;
+    public Float sumOfTotal;
 
     // Components of the controls JPanel
 
@@ -148,12 +151,14 @@ public class Tab {
                             servicesAdded);
 
                     renderServicesAdded(servicesAdded);
-                    // servicesAdded = Multidimentional.addIfItemNotFound(lastRowSelected, 0,
-                    // lastRowSelected[0],
-                    // servicesAdded);
+
                     System.out.println("Debemos ver el arreglo multidimensional actualizado");
                     System.out.println(Arrays.deepToString(servicesAdded));
-
+                    String[][] cleared = Multidimentional.removeArrayNullValues(servicesAdded, 4);
+                    sumOfTotal = Helpers.getTotal(Multidimentional.removeArrayNullValues(servicesAdded, 4), 2, 3);
+                    System.out.println("Nueva suma es de :");
+                    System.out.println("$" + sumOfTotal);
+                    totalSection = displayTotalsAndRefresh(sumOfTotal);
                 }
 
             });
@@ -261,5 +266,27 @@ public class Tab {
 
         JScrollPane scroll = new JScrollPane(addedServicesTable);
         addedServicesSection.add(scroll);
+    }
+
+    public JPanel displayTotalsAndRefresh(Float total) {
+
+        if (totalSection == null) {
+            totalSection = new JPanel();
+        }
+        totalSection.removeAll();
+        totalSection.revalidate();
+        totalSection.repaint();
+
+        totalSection.setLayout(new BoxLayout(totalSection, BoxLayout.X_AXIS));
+        JPanel left = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JLabel textTotal = new JLabel("Total: ");
+
+        JLabel sum = new JLabel("$" + total);
+        left.add(textTotal);
+        right.add(sum);
+        totalSection.add(left);
+        totalSection.add(right);
+        return totalSection;
     }
 }

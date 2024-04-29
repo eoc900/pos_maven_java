@@ -30,4 +30,14 @@ public class Helpers {
         return timestamp;
     }
 
+    public static float getTotal(String[][] data, int priceIndex, int qtyIndex) {
+        Float total = 0f;
+
+        for (int i = 0; i < data.length; i++) {
+            Float price = Float.parseFloat(data[i][priceIndex].replaceAll("[$]", ""));
+            total += (price * Float.parseFloat(data[i][3]));
+        }
+        return total;
+    }
+
 }
