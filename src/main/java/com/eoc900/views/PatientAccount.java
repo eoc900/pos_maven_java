@@ -157,15 +157,18 @@ class PatientAccount {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("You are requesting to print something...");
-                System.out.println(Arrays.deepToString(generalInformation));
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-                LocalDateTime now = LocalDateTime.now();
-                String date = dtf.format(now);
-                System.out.println(date);
-                Printing printer = new Printing("Consultorio ZENA", nombrePaciente.getText(),
-                        "Centro Médico Quirúrgico", "461 1234567", date, generalInformation, total);
-                System.out.println(printer.mainTitle);
-                System.out.println(Arrays.toString(printer.returnPrintersAvailable()));
+                // DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                // LocalDateTime now = LocalDateTime.now();
+                // String date = dtf.format(now);
+                // Printing printer = new Printing("Consultorio ZENA", nombrePaciente.getText(),
+                // "Blvrd Adolfo López Mateos 1000, Col. Centro, 38000 Celaya, Gto., Mexico",
+                // "+52 461 613 1111",
+                // date,
+                // generalInformation, total);
+                // String printerName = printer.printersAvailable[0];
+
+                String normalStr = "En caso de requerir factura   ";
+                System.out.println("The number of character needed for this line is: " + normalStr.length());
             }
         });
     }

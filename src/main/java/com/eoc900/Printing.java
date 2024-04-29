@@ -22,6 +22,7 @@ public class Printing {
     public String[][] servicesC;
     public Float total;
     public String[] printersAvailable;
+    public int lineStrLimit;
 
     public Printing(String mainTitle, String patient, String location, String telephone, String date, String[][] data,
             Float total) {
@@ -33,6 +34,7 @@ public class Printing {
         this.servicesC = data;
         this.total = total;
         this.printersAvailable = returnPrintersAvailable();
+        this.lineStrLimit = 24;
     }
 
     public void setPrinterName(String name) {
@@ -70,14 +72,17 @@ public class Printing {
         PrintModeStyle bold = new PrintModeStyle()
                 .setBold(true);
 
+        escpos.writeLF(normal, telephone);
+        escpos.writeLF(normal, date);
+
         escpos.writeLF(title, this.mainTitle)
                 .feed(1)
-                .write(normal, "Cliente: ")
+                .write(normal, "Paciente: ")
                 .writeLF(subtitle, this.patientName).feed(1);
 
         for (int i = 0; i < service.length; i++) {
             escpos.writeLF(normal,
-                    Multidimentional.splitWord(servicesC[i][7], 2) + " " + servicesC[i][8] + " " + servicesC[i][9]);
+                    Multidimentional.splitWord(servicesC[i][7], 2) + " " + servicesC[i][8] + " " + servicesC[i][10]);
         }
 
         escpos.writeLF(normal, "----------------")
@@ -86,7 +91,7 @@ public class Printing {
                         "TOTAL:           $" + total)
                 .writeLF(normal, "-----------------")
                 .feed(2)
-                .writeLF(normal, "En caso de requerir factura")
+                .writeLF(normal, "En caso de requerir factura") // +3
                 .writeLF(normal, "consulte www.ejemplo.com")
                 .feed(3)
                 .cut(EscPos.CutMode.FULL);
@@ -94,4 +99,17 @@ public class Printing {
         escpos.close();
 
     }
+
+    // Complementing another function
+    public Boolean exceedsStringExtension(String str) {
+        if (str.length() > this.lineStrLimit) {
+            return true;
+        }
+        return false;
+    }
+
+    public void setLineExtension(int limit) {
+        this.lineStrLimit = limit;
+    }
+
 }

@@ -124,8 +124,7 @@ public class PendingPayments {
                     int row = pagosPendientes.getSelectedRow();
                     String folio = (String) pagosPendientes.getModel().getValueAt(row, 0);
 
-                    // System.out.println(Arrays.deepToString(Multidimentional.removeArrayNullValues(res,
-                    // 11)));
+                    System.out.println("Estás solicitando el siguiente folio: " + folio);
 
                     navigation.setMetaData(folio);
                     navigation.show("cuentaPaciente");

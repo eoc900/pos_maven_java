@@ -39,9 +39,7 @@ public class Controller {
             case "cuentaPaciente":
                 managerGetTabInfo();
                 break;
-
             default:
-
                 break;
         }
     }
