@@ -30,6 +30,9 @@ public class Controller {
             case "nuevoCliente":
                 managerNuevoCliente();
                 break;
+            case "editarCliente":
+                managerEditarCliente();
+                break;
             case "pagosPendientes":
                 managerPendingPayments();
                 break;
@@ -68,7 +71,7 @@ public class Controller {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        generalWindow.viewCreateTab("Nuevo paciente", db.results);
+        generalWindow.viewCreateTab("Nuevo paciente", db.results, false, null, null, "");
     }
 
     public void managerPendingPayments() {
@@ -98,6 +101,28 @@ public class Controller {
         String[][] res = Multidimentional.removeArrayNullValues(db.retrievePaidAccounts(1), 4);
         int num = db.retrievePaidAccountsNumber(1);
         generalWindow.moduleAccountsPaid(res, num);
+    }
+
+    public void managerEditarCliente() {
+        TabModel db = new TabModel();
+        db.init(false);
+        String folio = this.metaData;
+
+        ServiceModel db1 = new ServiceModel();
+        db1.init(false);
+        try {
+            String[][] results = db.retrieveServices(folio);
+            String[] patientTab = db.getPatientInformation(folio);
+            System.out.println(Arrays.toString(patientTab));
+            System.out.println(Arrays.deepToString(results));
+            db1.getServices(0, 19);
+            generalWindow.viewCreateTab("Editar cuenta paciente", db1.results, true,
+                    Multidimentional.removeArrayNullValues(results, 5), folio, patientTab[0]);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 
 }

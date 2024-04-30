@@ -279,7 +279,7 @@ public class TabModel extends DB {
                 // 2. Declare the array
                 String[] arr = new String[5];
                 arr[0] = Integer.toString(result.getInt("ID_Servicio"));
-                arr[1] = result.getString("ID_Servicio");
+                arr[1] = result.getString("Servicio");
                 arr[2] = Float.toString(result.getFloat("Precio"));
                 arr[3] = Integer.toString(result.getInt("Qty"));
                 arr[4] = Float.toString(result.getFloat("Sub_Total"));
@@ -505,6 +505,41 @@ public class TabModel extends DB {
             prepared.close();
             conn.close();
             return results;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String[] getPatientInformation(String folio) {
+        try {
+            String tag = "pendiente";
+
+            String sql = "SELECT Folio, Nombre_Paciente, Abierta_En, Pagada FROM Comandas WHERE Folio=?";
+            PreparedStatement prepared = conn.prepareStatement(sql);
+            prepared.setString(1, folio); // This would set age
+            ResultSet result = prepared.executeQuery();
+            int i = 0;
+            String[] arr = new String[3];
+            while (result.next()) {
+                // 2. Declare the array
+
+                arr[0] = result.getString("Nombre_Paciente");
+                java.sql.Date date = result.getDate("Abierta_En");
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                arr[1] = dateFormat.format(date);
+                int pagada = result.getInt("Pagada");
+                if (pagada == 1) {
+                    tag = "Pagado";
+                }
+                arr[2] = tag;
+
+            }
+            result.close();
+            prepared.close();
+            conn.close();
+            return arr;
 
         } catch (SQLException e) {
             e.printStackTrace();

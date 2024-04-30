@@ -42,7 +42,7 @@ public class Multidimentional {
                 searchFor, searchInArr);
 
         if (index == null) {
-            // System.out.println("Item was'nt found");
+            System.out.println("Item was'nt found");
             String[][] newArr = Multidimentional.popArray(arr2Add, searchInArr);
             System.out.println("Longitud de arreglo es el siguiente");
             System.out.println(newArr.length);
@@ -72,14 +72,11 @@ public class Multidimentional {
 
     // -----> insert at the beginning of the array
     public static String[][] popArray(String[] arr2Add, String[][] pushHere) {
-
         String[][] newArr = new String[pushHere.length + 1][arr2Add.length];
-
         newArr[0] = arr2Add;
-        for (int i = 1; i < pushHere.length; i++) {
-            newArr[i] = pushHere[i - 1];
+        for (int i = 0; i < pushHere.length; i++) {
+            newArr[i + 1] = pushHere[i];
         }
-
         return newArr;
     }
 
@@ -117,13 +114,11 @@ public class Multidimentional {
         String[][] newArr = new String[removeHere.length][removeHere[0].length];
         int k = 0;
         for (int i = 0; i < removeHere.length; i++) {
-
             if (i != index) {
                 newArr[k] = removeHere[i];
                 k++;
                 continue;
             }
-
         }
         return newArr;
 
@@ -147,7 +142,8 @@ public class Multidimentional {
         return newArr;
     }
 
-    public static String[][] reduceArray(String[][] mainArray, String[] arrayOfIndexes) {
+    public static String[][] reduceArray(String[][] mainArray, String[] arrayOfIndexes) { // For the moment only 4 item
+                                                                                          // array
         int lenOfItem = arrayOfIndexes.length;
         int lenOfBigArr = mainArray.length;
         String[][] updated = new String[lenOfBigArr][lenOfItem];
