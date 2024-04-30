@@ -512,6 +512,41 @@ public class TabModel extends DB {
         return null;
     }
 
+    public String[] getPatientInformation(String folio) {
+        try {
+            String tag = "pendiente";
+
+            String sql = "SELECT Folio, Nombre_Paciente, Abierta_En, Pagada FROM Comandas WHERE Folio=?";
+            PreparedStatement prepared = conn.prepareStatement(sql);
+            prepared.setString(1, folio); // This would set age
+            ResultSet result = prepared.executeQuery();
+            int i = 0;
+            String[] arr = new String[3];
+            while (result.next()) {
+                // 2. Declare the array
+
+                arr[0] = result.getString("Nombre_Paciente");
+                java.sql.Date date = result.getDate("Abierta_En");
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                arr[1] = dateFormat.format(date);
+                int pagada = result.getInt("Pagada");
+                if (pagada == 1) {
+                    tag = "Pagado";
+                }
+                arr[2] = tag;
+
+            }
+            result.close();
+            prepared.close();
+            conn.close();
+            return arr;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public String[][] getTabInformation(String folio) {
         init(false);
 

@@ -71,7 +71,7 @@ public class Controller {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        generalWindow.viewCreateTab("Nuevo paciente", db.results, false, null, null);
+        generalWindow.viewCreateTab("Nuevo paciente", db.results, false, null, null, "");
     }
 
     public void managerPendingPayments() {
@@ -112,10 +112,12 @@ public class Controller {
         db1.init(false);
         try {
             String[][] results = db.retrieveServices(folio);
+            String[] patientTab = db.getPatientInformation(folio);
+            System.out.println(Arrays.toString(patientTab));
             System.out.println(Arrays.deepToString(results));
             db1.getServices(0, 19);
-            generalWindow.viewCreateTab("Nuevo paciente", db1.results, true,
-                    Multidimentional.removeArrayNullValues(results, 5), folio);
+            generalWindow.viewCreateTab("Editar cuenta paciente", db1.results, true,
+                    Multidimentional.removeArrayNullValues(results, 5), folio, patientTab[0]);
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

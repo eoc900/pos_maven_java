@@ -140,8 +140,10 @@ public class Tab {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     System.out.println("Haz solicitado borrar un servicio...");
                     servicesAdded = Multidimentional.removeItemFromArray(0, lastRowSelected[0], servicesAdded);
-                    renderServicesAdded(servicesAdded);
+                    renderServicesAdded(servicesAdded, false);
                     System.out.println(Arrays.deepToString(servicesAdded));
+                    sumOfTotal = Helpers.getTotal(Multidimentional.removeArrayNullValues(servicesAdded, 4), 2, 3);
+                    totalSection = displayTotalsAndRefresh(sumOfTotal);
 
                 }
             });
@@ -151,18 +153,36 @@ public class Tab {
 
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-
-                    servicesAdded = Multidimentional.addIfItemNotFound(lastRowSelected, 0, lastRowSelected[0],
+                    System.out.println("Last row selected is: ");
+                    System.out.println(Arrays.toString(lastRowSelected));
+                    String[][] newArr = Multidimentional.addIfItemNotFound(lastRowSelected, 0, lastRowSelected[0],
                             servicesAdded);
 
-                    renderServicesAdded(servicesAdded);
+                    if (servicesAdded.equals(newArr)) {
+                        // means the item to add already existed
+                        servicesAdded = Multidimentional.updateItemOnArray(0, lastRowSelected[0],
+                                lastRowSelected,
+                                servicesAdded);
+                    } else {
+
+                        // means the item to add already existed
+                        servicesAdded = newArr;
+
+                    }
+
+                    String btnText = insertToServiceList.getText();
+                    System.out.println("El nomber del botón :" + btnText);
+
+                    Boolean editing = false;
+                    if (btnText.equals("Actualizar")) {
+                        editing = true;
+                    }
+                    renderServicesAdded(servicesAdded, editing);
 
                     System.out.println("Debemos ver el arreglo multidimensional actualizado");
                     System.out.println(Arrays.deepToString(servicesAdded));
                     String[][] cleared = Multidimentional.removeArrayNullValues(servicesAdded, 4);
                     sumOfTotal = Helpers.getTotal(Multidimentional.removeArrayNullValues(servicesAdded, 4), 2, 3);
-                    System.out.println("Nueva suma es de :");
-                    System.out.println("$" + sumOfTotal);
                     totalSection = displayTotalsAndRefresh(sumOfTotal);
                 }
 
@@ -239,7 +259,7 @@ public class Tab {
         controlIdText.setText(Id);
     }
 
-    public void renderServicesAdded(String[][] currentServicesAdded) {
+    public void renderServicesAdded(String[][] currentServicesAdded, Boolean isEdit) {
         addedServicesSection.removeAll();
         // add your elements
         addedServicesSection.revalidate();
@@ -251,19 +271,29 @@ public class Tab {
         selectionModel.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
-                    removeService.setVisible(true);
+
                     int row = addedServicesTable.getSelectedRow();
                     String id = (String) addedServicesTable.getModel().getValueAt(row, 0);
                     String serviceName = (String) addedServicesTable.getModel().getValueAt(row, 1);
                     String price = (String) addedServicesTable.getModel().getValueAt(row, 2);
                     String qty = (String) addedServicesTable.getModel().getValueAt(row, 3);
-                    insertToServiceList.setText("Actualizar");
                     pushIntoLastRowSelected(id, serviceName, price, qty);
-                    updateControlsSection(id, serviceName, qty, price);
-                    servicesAdded = Multidimentional.updateItemOnArray(0, lastRowSelected[0], lastRowSelected,
-                            servicesAdded);
-                    // displaySelectedControls();
-                    // renderServicesAdded(servicesAdded);
+
+                    if (isEdit) {
+                        displaySelectedControls();
+                        removeService.setVisible(true);
+                        insertToServiceList.setText("Actualizar");
+                    }
+
+                    if (!isEdit) {
+                        removeService.setVisible(true);
+                        insertToServiceList.setText("Actualizar");
+                        updateControlsSection(id, serviceName, qty, price);
+                        // Original
+                        servicesAdded = Multidimentional.updateItemOnArray(0, lastRowSelected[0],
+                                lastRowSelected,
+                                servicesAdded);
+                    }
 
                 }
             }

@@ -208,7 +208,7 @@ public class View extends JFrame {
 
     // ------> NOTE: Ready but needs refactoring
     public void viewCreateTab(String title, String[][] data, Boolean isEdit, String[][] servicesToEdit,
-            String folioEdit) {
+            String folioEdit, String pName) {
 
         // We clear the window before rendering
         clearWindow();
@@ -232,13 +232,6 @@ public class View extends JFrame {
 
         Tab tab = new Tab(tabID, data, null);
 
-        if (isEdit) {
-            // Just extract what is nesesary from the retrievedServices
-            String[] indexes = { "0", "1", "2", "3" };
-            String[][] newArr = Multidimentional.reduceArray(servicesToEdit, indexes);
-            tab.servicesAdded = servicesToEdit;
-        }
-
         // TAB INPUTS
         JPanel tabInputs = tab.tabInputs();
         tabInputs.setPreferredSize(new Dimension(width, 40));
@@ -253,10 +246,6 @@ public class View extends JFrame {
 
         // SERVICES SELECTED
         JPanel servicesSelected = tab.addedServicesPanel();
-        if (isEdit) {
-            tab.servicesAdded = servicesToEdit;
-            tab.renderServicesAdded(servicesToEdit);
-        }
 
         // TOTAL UPDATE
         JPanel totals = tab.displayTotalsAndRefresh(0.00f);
@@ -270,6 +259,16 @@ public class View extends JFrame {
         JButton insertarServicio = tab.insertToServiceList;
 
         // TAB MAIN BODY <-------------------
+
+        if (isEdit) {
+            // Just extract what is nesesary from the retrievedServices
+            String[] indexes = { "0", "1", "2", "3" };
+            String[][] newArr = Multidimentional.reduceArray(servicesToEdit, indexes);
+            tab.servicesAdded = servicesToEdit;
+            tab.renderServicesAdded(servicesToEdit, true);
+            tab.patientName.setText(pName);
+
+        }
 
         storing.addActionListener(new ActionListener() {
             @Override
