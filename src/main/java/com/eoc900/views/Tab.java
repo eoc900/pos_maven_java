@@ -49,13 +49,18 @@ public class Tab {
     public JTextField patientName;
     public JTable servicesTable;
 
-    public Tab(String tID, String[][] data) {
+    public Tab(String tID, String[][] data, String[][] preExistingServices) {
         // each time that the createTab view is open we get new values
         this.tabIdentifier = tID;
         this.servicesAvailable = data;
+
         servicesAdded = new String[data.length][4];
         controlsPanel = new JPanel();
         // controlsPanel.setLayout(new BoxLayout(selectedList, BoxLayout.Y_AXIS));
+    }
+
+    public void updateServicesAdd(String[][] fourItemArr) {
+        servicesAdded = fourItemArr;
     }
 
     public JPanel tabInputs() {

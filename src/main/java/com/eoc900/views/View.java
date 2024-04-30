@@ -210,13 +210,6 @@ public class View extends JFrame {
     public void viewCreateTab(String title, String[][] data, Boolean isEdit, String[][] servicesToEdit,
             String folioEdit) {
 
-        if (isEdit) {
-            // Just extract what is nesesary from the retrievedServices
-            String[] indexes = { "0", "1", "2", "3" };
-            String[][] newArr = Multidimentional.reduceArray(servicesToEdit, indexes);
-
-        }
-
         // We clear the window before rendering
         clearWindow();
         this.setTitle(title);
@@ -230,11 +223,21 @@ public class View extends JFrame {
         // 1. Generate Random Tab Identifier
 
         String tabID = folioEdit;
+
+        // Tab tab = new Tab(tabID, data, true, newArr);
+
         if (!isEdit) {
             tabID = Helpers.generateRandomCode(7);
         }
 
-        Tab tab = new Tab(tabID, data);
+        Tab tab = new Tab(tabID, data, null);
+
+        if (isEdit) {
+            // Just extract what is nesesary from the retrievedServices
+            String[] indexes = { "0", "1", "2", "3" };
+            String[][] newArr = Multidimentional.reduceArray(servicesToEdit, indexes);
+            tab.servicesAdded = servicesToEdit;
+        }
 
         // TAB INPUTS
         JPanel tabInputs = tab.tabInputs();
@@ -251,6 +254,7 @@ public class View extends JFrame {
         // SERVICES SELECTED
         JPanel servicesSelected = tab.addedServicesPanel();
         if (isEdit) {
+            tab.servicesAdded = servicesToEdit;
             tab.renderServicesAdded(servicesToEdit);
         }
 
@@ -304,6 +308,25 @@ public class View extends JFrame {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
                         System.out.println(e1);
+                    }
+                }
+
+                if (isEdit) {
+                    System.out.println("es editable");
+
+                    // 1. Check the values are correct as when updating services
+                    System.out.println(Arrays.deepToString(tab.servicesAdded));
+                    // 2. First we need to remove the old services related to the tab
+                    TabModel db = new TabModel();
+                    db.init(false);
+                    try {
+                        db.removeServices(tab.tabIdentifier);
+                        db.insertServices(tab.tabIdentifier, tab.servicesAdded);
+                        navigation.setMetaData(tab.tabIdentifier);
+                        navigation.show("cuentaPaciente");
+                    } catch (SQLException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
                     }
                 }
 

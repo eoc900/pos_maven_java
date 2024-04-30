@@ -126,9 +126,6 @@ public class ServicesTable extends Service {
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
 
-                    System.out.println("Service name");
-                    System.out.println(fields[0]);
-
                     // The idea is to visualize the selected row in certain area where the user
                     // adjust more or less qty
 
